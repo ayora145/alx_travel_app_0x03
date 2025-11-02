@@ -1,36 +1,47 @@
-# ALX Travel App 0x02 - Chapa Payment Integration
+# ALX Travel App 0x03 - Background Jobs with Celery
 
-This project integrates the Chapa Payment Gateway into a Django travel booking system.
+This project integrates Celery with RabbitMQ for background task processing in a Django travel booking system.
 
 ## Features
 - Secure payment initiation using Chapa API
 - Verification of payment status
 - Payment tracking model
 - Asynchronous email confirmation via Celery
-- Sandbox testing environment
+- RabbitMQ message broker integration
+- Background task processing
 
 ## Setup
-1. Create a `.env` file with:
+1. Install RabbitMQ:
+```bash
+sudo apt install rabbitmq-server
+```
+
+2. Start RabbitMQ:
+```bash
+sudo systemctl start rabbitmq-server
+```
+
+3. Create a `.env` file with:
 ```
 CHAPA_SECRET_KEY=your_key_here
 ```
 
-2. Install dependencies:
+4. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Run migrations:
+5. Run migrations:
 ```bash
 python manage.py migrate
 ```
 
-4. Start Celery:
+6. Start Celery worker:
 ```bash
 celery -A alx_travel_app worker --loglevel=info
 ```
 
-5. Start Django server and test:
+7. Start Django server:
 ```bash
 python manage.py runserver
 ```
@@ -45,20 +56,18 @@ python manage.py runserver
 
 ## Testing
 Use Postman to test endpoints at `http://127.0.0.1:8000/api/`
-## Celery + RabbitMQ Configuration (Milestone 5)
+## Background Task Processing
 
-Files added/modified:
-- alx_travel_app/celery.py
-- alx_travel_app/__init__.py
-- alx_travel_app/settings.py (added CELERY_ and EMAIL_ settings)
-- listings/tasks.py (send_booking_confirmation_email task)
-- listings/views.py (BookingViewSet triggers task)
+This project implements asynchronous email notifications using Celery with RabbitMQ as the message broker.
 
-To run locally:
-1. Install RabbitMQ: `sudo apt install rabbitmq-server`
-2. Start RabbitMQ: `sudo systemctl start rabbitmq-server`
-3. Start Django server: `python manage.py runserver`
-4. Start Celery worker: `celery -A alx_travel_app worker --loglevel=info`
-5. Create a booking via POST /api/bookings/ - email task will be processed asynchronously
+### Key Components:
+- **alx_travel_app/celery.py** - Celery configuration
+- **alx_travel_app/__init__.py** - Celery app initialization
+- **alx_travel_app/settings.py** - Celery and email settings
+- **listings/tasks.py** - Background email task
+- **listings/views.py** - Task triggering in BookingViewSet
 
-Repository: alx_travel_app_0x03
+### Testing:
+Create a booking via `POST /api/bookings/` and the email confirmation will be processed asynchronously in the background.
+
+**Repository:** alx_travel_app_0x03
