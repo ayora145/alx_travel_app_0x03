@@ -3,7 +3,7 @@ import os
 from celery import Celery
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'alx_travel_app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 
 app = Celery('alx_travel_app')
 
